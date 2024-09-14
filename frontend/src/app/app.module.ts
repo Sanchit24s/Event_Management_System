@@ -21,6 +21,7 @@ import { RegisterComponent } from './components/auth/register/register.component
 import { EventListComponent } from './components/events/event-list/event-list.component';
 import { ViewEventComponent } from './components/events/view-event/view-event.component';
 import { CreateEventDialogComponent } from './components/dialog/create-event-dialog/create-event-dialog.component';
+import { ManageAttendeeDialogComponent } from './components/dialog/manage-attendee-dialog/manage-attendee-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { CreateEventDialogComponent } from './components/dialog/create-event-dia
     RegisterComponent,
     EventListComponent,
     ViewEventComponent,
-    CreateEventDialogComponent
+    CreateEventDialogComponent,
+    ManageAttendeeDialogComponent
   ],
   imports: [
     BrowserModule,

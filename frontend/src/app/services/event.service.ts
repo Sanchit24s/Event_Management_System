@@ -48,4 +48,16 @@ export class EventService {
       headers: this.getAuthHeaders()
     });
   }
+
+  getAttendees(eventId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/getAttendees/${eventId}`);
+  }
+
+  addAttendee(eventId: string, email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/addAttendee/${eventId}`, { email });
+  }
+
+  removeAttendee(eventId: string, attendeeId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${eventId}/attendee/${attendeeId}`);
+  }
 }

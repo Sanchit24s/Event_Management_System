@@ -8,6 +8,7 @@ const {
     deleteEvent,
     addAttendee,
     removeAttendee,
+    getAttendee,
 } = require("../controllers/eventController");
 const logActivity = require("../middleware/userActivity");
 
@@ -19,7 +20,8 @@ router.get("/list/:id", validateToken, getEventById);
 router.delete("/delete/:id", validateToken, deleteEvent);
 router.post("/rsvp", validateToken, rsvpEvent);
 
-router.post("/events/addAttendee/:id", validateToken, addAttendee);
-router.post("/events/removeAttendee/:id", validateToken, removeAttendee);
+router.get("/getAttendees/:id", validateToken, getAttendee);
+router.post("/addAttendee/:id", validateToken, addAttendee);
+router.delete("/:eventId/attendee/:attendeeId", validateToken, removeAttendee);
 
 module.exports = router;

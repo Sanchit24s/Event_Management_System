@@ -1,5 +1,6 @@
 const Event = require("../models/eventModel");
 const ActivityLog = require("../models/activitylogModel");
+const User = require("../models/userModel");
 
 // Create a new event
 const createEvent = async (req, res) => {
@@ -94,16 +95,22 @@ const rsvpEvent = async (req, res) => {
 // add attendee
 const addAttendee = async (req, res) => {
     try {
+        const { email } = req.body;
+
         const event = await Event.findById(req.params.id);
         if (!event) return res.status(404).json({ error: "Event not found" });
 
-        if (!event.attendees.includes(req.body.userId)) {
-            event.attendees.push(req.body.userId);
-            await event.save();
-            res.json({ message: "Attendee added" });
-        } else {
-            res.status(400).json({ error: "User already an attendee" });
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        if (event.attendees.includes(user._id)) {
+            return res.status(400).json({ error: "User is already an attendee" });
         }
+
+        event.attendees.push(user._id);
+        await event.save();
+
+        res.json({ message: "Attendee added successfully", event });
     } catch (err) {
         res.status(500).json({ error: "Server Error" });
     }
@@ -112,15 +119,42 @@ const addAttendee = async (req, res) => {
 // Remove attendee
 const removeAttendee = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id);
-        if (!event) return res.status(404).json({ error: "Event not found" });
+        const { eventId, attendeeId } = req.params;
 
-        event.attendees = event.attendees.filter(
-            (attendee) => !attendee.equals(req.body.userId)
-        );
+        // Find the event by ID
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ error: "Event not found" });
+        }
+
+        // Check if attendee is part of the event
+        const attendeeIndex = event.attendees.findIndex(attendee => attendee.equals(attendeeId));
+        if (attendeeIndex === -1) {
+            return res.status(404).json({ error: "Attendee not found" });
+        }
+
+        // Remove attendee
+        event.attendees.splice(attendeeIndex, 1);
         await event.save();
-        res.json({ message: "Attendee removed" });
+
+        return res.json({ message: "Attendee removed successfully" });
     } catch (err) {
+        console.error('Error removing attendee:', err);
+        return res.status(500).json({ error: "Server Error" });
+    }
+};
+
+// Get attendee
+const getAttendee = async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+
+        if (!event) {
+            return res.status(404).json({ error: "Event not found" });
+        }
+
+        res.json({ attendees: event.attendees });
+    } catch (error) {
         res.status(500).json({ error: "Server Error" });
     }
 };
@@ -133,4 +167,5 @@ module.exports = {
     rsvpEvent,
     addAttendee,
     removeAttendee,
+    getAttendee
 };

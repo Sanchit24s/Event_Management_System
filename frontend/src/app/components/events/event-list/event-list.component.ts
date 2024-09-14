@@ -6,6 +6,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { Event } from 'src/app/models/event.model';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateEventDialogComponent } from '../../dialog/create-event-dialog/create-event-dialog.component';
+import { ManageAttendeeDialogComponent } from '../../dialog/manage-attendee-dialog/manage-attendee-dialog.component';
 
 @Component({
   selector: 'app-event-list',
@@ -73,6 +74,19 @@ export class EventListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.loadEvents();
+    });
+  }
+
+  openManageAttendeesDialog(eventId: string): void {
+    const dialogRef = this.dialog.open(ManageAttendeeDialogComponent, {
+      width: '600px',
+      data: { eventId: eventId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadEvents(); // Refresh event data after managing attendees
+      }
     });
   }
 }

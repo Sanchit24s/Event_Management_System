@@ -1,0 +1,35 @@
+<!-- manage-attendees-dialog.component.html -->
+<h1 mat-dialog-title>Manage Attendees</h1>
+<div mat-dialog-content>
+    <h3>Attendees List</h3>
+    <table class="attendees-table">
+        <tr *ngFor="let attendee of attendees">
+            <td>{{ attendee.name }} ({{ attendee.email }})</td>
+            <td>
+                <button mat-icon-button (click)="removeAttendee(attendee._id)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </tr>
+    </table>
+
+    <h3>Add New Attendee</h3>
+    <form [formGroup]="addAttendeeForm" (ngSubmit)="addAttendee()">
+        <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" placeholder="Enter attendee's email">
+            <mat-error *ngIf="addAttendeeForm.get('email')?.hasError('required')">
+                Email is required
+            </mat-error>
+            <mat-error *ngIf="addAttendeeForm.get('email')?.hasError('email')">
+                Invalid email
+            </mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="addAttendeeForm.invalid">Add
+            Attendee</button>
+    </form>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="onClose()">Close</button>
+</div>
