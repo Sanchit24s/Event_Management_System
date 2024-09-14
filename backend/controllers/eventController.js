@@ -13,12 +13,6 @@ const createEvent = async (req, res) => {
         });
         await event.save();
 
-        // const log = new ActivityLog({
-        //     userId: req.user.id,
-        //     action: `Created an event: ${title}`,
-        // });
-        // await log.save();
-
         res.json(event);
     } catch (err) {
         if (err.name === "ValidationError") {
@@ -38,11 +32,17 @@ const createEvent = async (req, res) => {
 // Get all events
 const getEvents = async (req, res) => {
     try {
-        const events = await Event.find().populate(
-            "attendees createdBy",
-            "name email"
-        );
-        res.json(events);
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+
+        const totalCount = await Event.countDocuments();
+
+        const events = await Event.find()
+            .populate("attendees createdBy", "name email")
+            .skip((page - 1) * pageSize)
+            .limit(pageSize);
+
+        res.json({ events, totalCount });
     } catch (err) {
         res.status(500).send("Server Error");
     }
@@ -51,7 +51,9 @@ const getEvents = async (req, res) => {
 // Get event by id
 const getEventById = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id);
+        const event = await Event.findById(req.params.id)
+            .populate("attendees", "name email")
+            .populate("createdBy", "name email");
         if (!event) return res.status(404).json({ error: "Event not found" });
         res.json(event);
     } catch (err) {
@@ -82,13 +84,6 @@ const rsvpEvent = async (req, res) => {
         }
 
         await event.save();
-
-        // Log the user activity
-        // const log = new ActivityLog({
-        //     userId: req.user.id,
-        //     action: `RSVP'ed to event: ${event.title}`,
-        // });
-        // await log.save();
 
         res.json(event);
     } catch (err) {

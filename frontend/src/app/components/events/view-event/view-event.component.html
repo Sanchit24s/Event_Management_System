@@ -1,0 +1,13 @@
+<div *ngIf="event">
+    <h2>{{ event.title }}</h2>
+    <p><strong>Description:</strong> {{ event.description }}</p>
+    <p><strong>Date:</strong> {{ event.date | date:'dd/MM/yyyy' }}</p>
+    <p><strong>Created By:</strong> {{ event.createdBy.name }}</p>
+    <p><strong>Attendees:</strong></p>
+    <ul>
+        <li *ngFor="let attendee of event.attendees">{{ attendee.name }}</li>
+    </ul>
+</div>
+<div *ngIf="!event">
+    <p>Loading event details...</p>
+</div>
