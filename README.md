@@ -151,8 +151,10 @@ Welcome to the Event Management Application! This application allows users to cr
   - Response: 204 No Content
 
 - **EventListComponent**: Displays a list of events with pagination and actions for viewing and deleting events.
-- **Event Reminders using Nodemailer**
-  - Functionality
-  - The system sends automated email reminders to users for events happening within the next 3 days. This feature is implemented using Nodemailer. The backend periodically checks the database for events scheduled within the upcoming three days and sends out reminder emails.
+
+## Event Reminders using Nodemailer
+
+- Functionality
+- The system sends automated email reminders to users for events happening within the next 3 days. This feature is implemented using Nodemailer. The backend periodically checks the database for events scheduled within the upcoming three days and sends out reminder emails.
 - **CreateEventDialogComponent**: Dialog for creating new events.
 - **AuthService**: Handles authentication and user login.
