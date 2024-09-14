@@ -1,0 +1,34 @@
+<h1 mat-dialog-title>Create Event</h1>
+<div mat-dialog-content>
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+        <mat-form-field>
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title">
+            <mat-error *ngIf="eventForm.get('title')?.hasError('required')">Title is required</mat-error>
+            <mat-error *ngIf="eventForm.get('title')?.hasError('minlength')">Title must be at least 5
+                characters</mat-error>
+            <mat-error *ngIf="eventForm.get('title')?.hasError('maxlength')">Title cannot be more than 100
+                characters</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description"></textarea>
+            <mat-error *ngIf="eventForm.get('description')?.hasError('maxlength')">Description cannot be more than 500
+                characters</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="eventForm.get('date')?.hasError('required')">Date is required</mat-error>
+        </mat-form-field>
+
+        <div mat-dialog-actions>
+            <button mat-button (click)="onCancel()">Cancel</button>
+            <button mat-raised-button color="primary" type="submit">Create</button>
+        </div>
+    </form>
+</div>

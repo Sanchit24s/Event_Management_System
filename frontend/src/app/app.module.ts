@@ -1,6 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -14,6 +20,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { EventListComponent } from './components/events/event-list/event-list.component';
 import { ViewEventComponent } from './components/events/view-event/view-event.component';
+import { CreateEventDialogComponent } from './components/dialog/create-event-dialog/create-event-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +28,8 @@ import { ViewEventComponent } from './components/events/view-event/view-event.co
     LoginComponent,
     RegisterComponent,
     EventListComponent,
-    ViewEventComponent
+    ViewEventComponent,
+    CreateEventDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +38,12 @@ import { ViewEventComponent } from './components/events/view-event/view-event.co
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatNativeDateModule,
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
     MatSortModule,
     MatPaginatorModule,
     MatTableModule,

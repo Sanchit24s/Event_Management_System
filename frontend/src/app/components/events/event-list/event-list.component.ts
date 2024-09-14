@@ -4,6 +4,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { EventService } from 'src/app/services/event.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Event } from 'src/app/models/event.model';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateEventDialogComponent } from '../../dialog/create-event-dialog/create-event-dialog.component';
 
 @Component({
   selector: 'app-event-list',
@@ -22,7 +24,8 @@ export class EventListComponent implements OnInit {
 
   constructor(
     private eventService: EventService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -55,5 +58,21 @@ export class EventListComponent implements OnInit {
         this.notificationService.showError('Delete event failed.');
       });
     }
+  }
+
+  openCreateEventDialog(): void {
+    const dialogRef = this.dialog.open(CreateEventDialogComponent, {
+      width: '400px',
+      height: 'auto',
+      position: {
+        top: '0px',
+        left: '100px'
+      },
+      panelClass: 'custom-dialog-container'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.loadEvents();
+    });
   }
 }

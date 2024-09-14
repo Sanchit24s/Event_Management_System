@@ -1,5 +1,8 @@
 <div class="event-list-container">
     <h2>Upcoming Events</h2>
+    <button mat-raised-button color="primary" (click)="openCreateEventDialog()">
+        Create New Event
+    </button>
 
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="title">
