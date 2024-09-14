@@ -50,14 +50,20 @@ export class EventService {
   }
 
   getAttendees(eventId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/getAttendees/${eventId}`);
+    return this.http.get<any[]>(`${this.apiUrl}/getAttendees/${eventId}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   addAttendee(eventId: string, email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/addAttendee/${eventId}`, { email });
+    return this.http.post(`${this.apiUrl}/addAttendee/${eventId}`, { email }, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   removeAttendee(eventId: string, attendeeId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${eventId}/attendee/${attendeeId}`);
+    return this.http.delete(`${this.apiUrl}/${eventId}/attendee/${attendeeId}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 }

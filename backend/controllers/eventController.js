@@ -1,6 +1,7 @@
 const Event = require("../models/eventModel");
 const ActivityLog = require("../models/activitylogModel");
 const User = require("../models/userModel");
+const mongoose = require("mongoose");
 
 // Create a new event
 const createEvent = async (req, res) => {
@@ -121,11 +122,19 @@ const removeAttendee = async (req, res) => {
     try {
         const { eventId, attendeeId } = req.params;
 
+        // Validate ObjectId format
+        if (!mongoose.Types.ObjectId.isValid(eventId) || !mongoose.Types.ObjectId.isValid(attendeeId)) {
+            return res.status(400).json({ error: "Invalid ID format" });
+        }
+
         // Find the event by ID
         const event = await Event.findById(eventId);
         if (!event) {
             return res.status(404).json({ error: "Event not found" });
         }
+
+        // Sanitize attendees array to remove null values
+        event.attendees = event.attendees.filter(attendee => attendee !== null);
 
         // Check if attendee is part of the event
         const attendeeIndex = event.attendees.findIndex(attendee => attendee.equals(attendeeId));

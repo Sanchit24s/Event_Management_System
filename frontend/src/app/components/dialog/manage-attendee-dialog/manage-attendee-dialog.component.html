@@ -4,9 +4,9 @@
     <h3>Attendees List</h3>
     <table class="attendees-table">
         <tr *ngFor="let attendee of attendees">
-            <td>{{ attendee.name }} ({{ attendee.email }})</td>
+            <td>{{ attendee }} </td>
             <td>
-                <button mat-icon-button (click)="removeAttendee(attendee._id)">
+                <button mat-icon-button (click)="removeAttendee(attendee)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </td>

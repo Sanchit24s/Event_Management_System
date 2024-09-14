@@ -31,8 +31,8 @@ export class ManageAttendeeDialogComponent implements OnInit {
 
   loadAttendees() {
     this.eventService.getAttendees(this.data.eventId).subscribe(
-      (attendees: any[]) => {
-        this.attendees = attendees;
+      (data: any) => {
+        this.attendees = data.attendees;
       },
       (error) => {
         console.error('Error loading attendees', error);

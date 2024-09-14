@@ -84,9 +84,7 @@ export class EventListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.loadEvents(); // Refresh event data after managing attendees
-      }
+      this.loadEvents();
     });
   }
 }
