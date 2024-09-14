@@ -13,11 +13,11 @@ const createEvent = async (req, res) => {
         });
         await event.save();
 
-        const log = new ActivityLog({
-            userId: req.user.id,
-            action: `Created an event: ${title}`,
-        });
-        await log.save();
+        // const log = new ActivityLog({
+        //     userId: req.user.id,
+        //     action: `Created an event: ${title}`,
+        // });
+        // await log.save();
 
         res.json(event);
     } catch (err) {
@@ -52,21 +52,21 @@ const getEvents = async (req, res) => {
 const getEventById = async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
-        if (!event) return res.status(404).json({ error: 'Event not found' });
+        if (!event) return res.status(404).json({ error: "Event not found" });
         res.json(event);
     } catch (err) {
-        res.status(500).json({ error: 'Server Error' });
+        res.status(500).json({ error: "Server Error" });
     }
 };
 
-// delete event 
+// delete event
 const deleteEvent = async (req, res) => {
     try {
         const event = await Event.findByIdAndDelete(req.params.id);
-        if (!event) return res.status(404).json({ error: 'Event not found' });
-        res.json({ message: 'Event deleted successfully' });
+        if (!event) return res.status(404).json({ error: "Event not found" });
+        res.json({ message: "Event deleted successfully" });
     } catch (err) {
-        res.status(500).json({ error: 'Server Error' });
+        res.status(500).json({ error: "Server Error" });
     }
 };
 
@@ -84,11 +84,11 @@ const rsvpEvent = async (req, res) => {
         await event.save();
 
         // Log the user activity
-        const log = new ActivityLog({
-            userId: req.user.id,
-            action: `RSVP'ed to event: ${event.title}`,
-        });
-        await log.save();
+        // const log = new ActivityLog({
+        //     userId: req.user.id,
+        //     action: `RSVP'ed to event: ${event.title}`,
+        // });
+        // await log.save();
 
         res.json(event);
     } catch (err) {
@@ -96,4 +96,46 @@ const rsvpEvent = async (req, res) => {
     }
 };
 
-module.exports = { createEvent, getEvents, getEventById, deleteEvent, rsvpEvent };
+// add attendee
+const addAttendee = async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).json({ error: "Event not found" });
+
+        if (!event.attendees.includes(req.body.userId)) {
+            event.attendees.push(req.body.userId);
+            await event.save();
+            res.json({ message: "Attendee added" });
+        } else {
+            res.status(400).json({ error: "User already an attendee" });
+        }
+    } catch (err) {
+        res.status(500).json({ error: "Server Error" });
+    }
+};
+
+// Remove attendee
+const removeAttendee = async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).json({ error: "Event not found" });
+
+        event.attendees = event.attendees.filter(
+            (attendee) => !attendee.equals(req.body.userId)
+        );
+        await event.save();
+        res.json({ message: "Attendee removed" });
+    } catch (err) {
+        res.status(500).json({ error: "Server Error" });
+    }
+};
+
+module.exports = {
+    createEvent,
+    getEvents,
+    getEventById,
+    deleteEvent,
+    rsvpEvent,
+    addAttendee,
+    removeAttendee,
+};

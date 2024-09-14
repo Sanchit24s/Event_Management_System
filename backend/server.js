@@ -5,6 +5,9 @@ const connectDB = require('./config/db');
 const authRoutes = require("./routes/authRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const remainder = require("./services/remainderService");
+const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 dotenv.config();
 
@@ -14,7 +17,27 @@ connectDB();
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+
+const allowedOrigins = ['http://localhost:4200'];
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}));
+
+app.use(helmet());
+app.use(mongoSanitize());
+
+// Rate limiting 
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100
+});
+app.use("/api/", apiLimiter);
 
 
 app.get('/', (req, res) => {

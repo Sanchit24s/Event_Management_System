@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const UserActivity = require('../models/activitylogModel');
 
 const register = async (req, res) => {
     try {
@@ -24,6 +25,12 @@ const register = async (req, res) => {
             email,
             id: user.id,
         };
+
+        const userId = user.id;
+        await UserActivity.create({
+            userId,
+            action: `${req.method} ${req.originalUrl}`,
+        });
         const token = jwt.sign(payload, process.env.JWT_SECRET, {
             expiresIn: "30d",
         });
@@ -64,6 +71,11 @@ const login = async (req, res) => {
             email,
             id: user.id,
         };
+        const userId = user.id;
+        await UserActivity.create({
+            userId,
+            action: `${req.method} ${req.originalUrl}`,
+        });
         const token = jwt.sign(paylaod, process.env.JWT_SECRET, {
             expiresIn: "30d",
         });
